@@ -58,27 +58,27 @@ const addDepartment = function(deptValue) {
     });
 };
 
-const addEmployee = () => {
-    const sql = `SELECT`;
+const addEmployee = function(empData) {
+    const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+    VALUES (${empData})`;
     db.query(sql, (err, results) => {
         if (err) {
             console.log('Error with adding employee')
             return;
         } else {
-            console.table(results);
             return;
         };
     });
 };
 
-const addRole = () => {
-    const sql = `SELECT`;
+const addRole = function(roleData) {
+    const sql = `INSERT INTO roles (job_title, salary, department_id)
+    VALUES (${roleData})`;
     db.query(sql, (err, results) => {
         if (err) {
             console.log('Error with adding role')
             return;
         } else {
-            console.table(results);
             return;
         };
     });

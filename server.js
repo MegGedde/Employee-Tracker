@@ -22,10 +22,120 @@ const addDept = () => {
       addDepartment(department);
       console.log('Added '+ department +' to the database');
       askQuestion();
-    })
-;}
+    });
+};
 
+const roleData = () => {
+    inquirer.prompt( {
+        type: 'input',
+        name: 'role',
+        message: "What is the name of the role?",
+        validate: roleInput => {
+            if (roleInput) {
+            return true;
+            } else {
+            console.log('Please enter the role name')
+            return false;
+            }
+  }})
+  .then(({ role }) => {
+                inquirer.prompt( {
+                        type: 'input',
+                        name: 'salary',
+                        message: "What is the salary for this role?",
+                        validate: salaryInput => {
+                            if (salaryInput) {
+                            return true;
+                            } else {
+                            console.log('Please enter the role salary')
+                            return false;
+                            }
+                }})
+                .then(({ salary }) => {
+                                inquirer.prompt( {
+                                        type: 'input',
+                                        name: 'department',
+                                        message: "What department does this role belong to?",
+                                        validate: departmentInput => {
+                                            if (departmentInput) {
+                                            return true;
+                                            } else {
+                                            console.log('Please enter the department')
+                                            return false;
+                                            }
+                                }})
+                                .then(({ department }) => {
+                                   console.log('Added '+ role +' to the database');
+                                    const data = "'" + role + "', " + "'" + salary + "', " + department;
+                                    addRole(data);
+                                    askQuestion();
+                                    });
+                                    });
+                                });
+                                };
 
+const employeeData = () => {
+        inquirer.prompt( {
+            type: 'input',
+            name: 'first_name',
+            message: "What is the employee's first name?",
+            validate: first_nameInput => {
+                if (first_nameInput) {
+                return true;
+                } else {
+                console.log('Please enter the first name')
+                return false;
+                }
+      }})
+      .then(({ first_name }) => {
+                    inquirer.prompt( {
+                            type: 'input',
+                            name: 'last_name',
+                            message: "What is the employee's last name?",
+                            validate: last_nameInput => {
+                                if (last_nameInput) {
+                                return true;
+                                } else {
+                                console.log("Please enter the employee's last name")
+                                return false;
+                                }
+                    }})
+                    .then(({ last_name }) => {
+                                    inquirer.prompt( {
+                                            type: 'input',
+                                            name: 'role',
+                                            message: "What is the employee's role?",
+                                            validate: roleInput => {
+                                                if (roleInput) {
+                                                return true;
+                                                } else {
+                                                console.log("Please enter the employee's role")
+                                                return false;
+                                                }
+                                    }})
+                                    .then(({ role }) => {
+                                                    inquirer.prompt( {
+                                                        type: 'input',
+                                                        name: 'manager',
+                                                        message: "Who is the employee's manager?",
+                                                        validate: managerInput => {
+                                                            if (managerInput) {
+                                                            return true;
+                                                            } else {
+                                                            console.log("Please enter the employee's manager")
+                                                            return false;
+                                                            }
+                                                }})
+                                                .then(({ manager }) => {
+                                                    console.log('Added '+ first_name +' to the database');
+                                                    const data = "'" + first_name + "', " + "'" + last_name + "', " + role + ", " + manager;
+                                                    addEmployee(data);
+                                                    askQuestion();
+                                                    });
+                                                    });
+                                                });
+                                    });
+                                    };
 
 
 const initializePogram = () => {
@@ -47,9 +157,9 @@ inquirer.prompt( {
   } else if (view === 'Add a department'){
     addDept()  
   } else if (view === 'Add a role'){
-    addRole()  
+    roleData()  
   } else if (view === 'Add an employee'){
-    addEmployee()  
+    employeeData()  
   } else if (view === 'Update an employee role'){
     updateEmployee()  
   }

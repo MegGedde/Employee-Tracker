@@ -5,6 +5,28 @@ const mysql = require('mysql2');
 const cTable = require('console.table');
 const { displayDepartments, displayRoles, displayEmployees, addDepartment, addRole, addEmployee, updateEmployee } = require('./routes');
 
+const addDept = () => {
+    inquirer.prompt( {
+        type: 'input',
+        name: 'department',
+        message: "What is the department name?",
+        validate: departmentInput => {
+            if (departmentInput) {
+            return true;
+            } else {
+            console.log('Please enter the department title')
+            return false;
+            }
+  }})
+  .then(({ department }) => {
+      addDepartment(department);
+      askQuestion();
+    })
+;}
+
+
+
+
 const initializePogram = () => {
 inquirer.prompt( {
     type: 'list',
@@ -22,7 +44,7 @@ inquirer.prompt( {
   } else if (view === 'View all employees'){
     displayEmployees()
   } else if (view === 'Add a department'){
-    addDepartment()  
+    addDept()  
   } else if (view === 'Add a role'){
     addRole()  
   } else if (view === 'Add an employee'){

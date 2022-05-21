@@ -43,13 +43,58 @@ const displayEmployees = function() {
     });
 };
 
-const addDepartment
+const addDepartment = function(deptValue) {
+    const sql = `INSERT INTO departments (name)
+                 VALUES ('${deptValue}');`;
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.log('Error with adding department')
+            return;
+        } else {
+            displayDepartments();
+            return;
+        };
+    });
+};
 
-const addEmployee
+const addEmployee = () => {
+    const sql = `SELECT`;
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.log('Error with adding employee')
+            return;
+        } else {
+            console.table(results);
+            return;
+        };
+    });
+};
 
-const addRole
+const addRole = () => {
+    const sql = `SELECT`;
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.log('Error with adding role')
+            return;
+        } else {
+            console.table(results);
+            return;
+        };
+    });
+};
 
-const updateEmployee
+const updateEmployee = () => {
+    const sql = `SELECT`;
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.log('Error with updating employee')
+            return;
+        } else {
+            console.table(results);
+            return;
+        };
+    });
+};
 
 module.exports = {
     displayDepartments, 

@@ -16,7 +16,7 @@ const displayDepartments = function() {
 };
 
 const displayRoles = () => {
-    const sql = `SELECT * FROM roles
+    const sql = `SELECT departments.name, roles.id, roles.job_title, roles.salary FROM roles
                  LEFT JOIN departments ON roles.department_id = departments.id`;
     db.query(sql, (err, results) => {
         if (err) {
@@ -30,8 +30,10 @@ const displayRoles = () => {
 };
 
 const displayEmployees = function() {
-    const sql = `SELECT * FROM employees
-                 LEFT JOIN roles ON employees.role_id = roles.id`;
+    const sql = `SELECT departments.name, roles.job_title, roles.salary, employees.id, employees.first_name, employees.last_name, employees.manager_id
+                 FROM employees
+                 LEFT JOIN roles ON employees.role_id = roles.id
+                 LEFT JOIN departments ON roles.department_id = departments.id`;
     db.query(sql, (err, results) => {
         if (err) {
             console.log('No employees');

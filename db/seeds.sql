@@ -11,8 +11,8 @@ VALUES
   ('Support', '30000.00', 3);
 
 
-INSERT INTO employees (first_name, last_name, role_id)
+INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES
-  ('James', 'Walsh', 1),
-  ('Jack', 'Christianson', 2),
-  ('Robert', 'Warner', 3);
+  ('James', 'Walsh', 1, NULL),
+  ('Jack', 'Christianson', 2, 1),
+  ('Robert', 'Warner', 3, 1);

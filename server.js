@@ -20,6 +20,7 @@ const addDept = () => {
   }})
   .then(({ department }) => {
       addDepartment(department);
+      console.log('Added '+ department +' to the database');
       askQuestion();
     })
 ;}

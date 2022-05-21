@@ -51,7 +51,6 @@ const addDepartment = function(deptValue) {
             console.log('Error with adding department')
             return;
         } else {
-            displayDepartments();
             return;
         };
     });

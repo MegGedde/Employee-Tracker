@@ -84,18 +84,82 @@ const addRole = function(roleData) {
     });
 };
 
-const updateEmployee = () => {
-    const sql = `SELECT`;
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.log('Error with updating employee')
-            return;
-        } else {
-            console.table(results);
-            return;
-        };
+const getEmployees = function() {
+    return new Promise(function(resolve, reject) {
+        const queryString = "SELECT * FROM employees";
+        db.query(queryString, function(err, result) {
+            if (err) {
+                return reject(err);
+            }
+            const employeesArray = [];
+            for (let i=0; i<result.length; i++) {
+                const empObj = {
+                    id: result[i].id,
+                    name: result[i].first_name + " " + result[i].last_name
+                };
+                employeesArray.push(empObj);
+            }
+            return resolve(employeesArray);
+        });
     });
 };
+
+const getRoles = function() {
+    return new Promise(function(resolve, reject) {
+        const queryString = "SELECT * FROM roles";
+        db.query(queryString, function(err, result) {
+            if (err) {
+                return reject(err);
+            }
+            const rolesArray = [];
+            for (let i=0; i<result.length; i++) {
+                const roleObj = {
+                    id: result[i].id,
+                    title: result[i].job_title
+                };
+                rolesArray.push(roleObj);
+            }
+            return resolve(rolesArray);
+        });
+    });
+};
+
+const updateEmployee = function(emp, newRole) {
+    return new Promise(function(resolve, reject) {
+        const queryString = "SELECT id FROM roles WHERE job_title = ?";
+        db.query(queryString, newRole, function(err, result) {
+            if (err) {
+                return reject(err);
+            }
+            const newRoleId = result[0].id;
+            const queryString = "UPDATE employees SET ? WHERE ?";
+            db.query(queryString,[{role_id: newRoleId},{id: emp}],function(err, result) {
+                    if (err) {
+                        console.log('error with update')
+                        return; 
+                    }
+                    console.log("Employee's role successfully updated!");
+                    return resolve();
+                });
+        });
+    });
+    
+}
+
+// const updateEmployee = function(employee, newRole) {
+//     const sql = `UPDATE employees SET role_id = ${newRole}
+//                  WHERE id = ${employee}`;
+//     db.query(sql, (err, results) => {
+//         if (err) {
+//             console.log('Error with updating employee')
+//             return;
+//         } else {
+//             console.table(results);
+//             return;
+//         };
+//     });
+// };
+
 
 module.exports = {
     displayDepartments, 
@@ -104,5 +168,7 @@ module.exports = {
     addDepartment,
     addEmployee,
     addRole,
-    updateEmployee
+    updateEmployee,
+    getEmployees,
+    getRoles
 };

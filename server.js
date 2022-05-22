@@ -3,7 +3,8 @@ const inquirer = require('inquirer');
 const db = require('./db/connection');
 const mysql = require('mysql2');
 const cTable = require('console.table');
-const { displayDepartments, displayRoles, displayEmployees, addDepartment, addRole, addEmployee, updateEmployee } = require('./routes');
+const { displayDepartments, displayRoles, displayEmployees, addDepartment, addRole, addEmployee, updateEmployee, getEmployees, getRoles } = require('./routes');
+
 
 const addDept = () => {
     inquirer.prompt( {
@@ -138,6 +139,44 @@ const employeeData = () => {
                                     };
 
 
+const updateData = () => {
+    getEmployees()
+    .then(function(res) {
+        const employeesArray = [];
+        for (let i=0; i<res.length; i++) {
+            employeesArray.push(res[i].name);
+        }
+        getRoles()
+        .then(function(response) {
+            const roleArray = [];
+            for (let i=0; i<response.length; i++) {
+                roleArray.push(response[i].title);
+            }
+    inquirer.prompt([{
+        type: 'list',
+        name: 'employee',
+        message: "Which employee's role do you want to update?",
+        choices: employeesArray
+    }, {
+        type: 'list',
+        name: 'role',
+        message: "What is this employee's current role?",
+        choices: roleArray
+     }]).then(function({employee, role}) {
+            const empID = res[employeesArray.indexOf(employee)].id;
+            console.log(empID + role);
+            updateEmployee(empID, role);
+            console.log('Updated ' + employee + "'s role to " + role);
+            // askQuestion();
+            });
+        });
+                  
+    });
+};
+
+
+
+
 const initializePogram = () => {
 inquirer.prompt( {
     type: 'list',
@@ -161,7 +200,7 @@ inquirer.prompt( {
   } else if (view === 'Add an employee'){
     employeeData()  
   } else if (view === 'Update an employee role'){
-    updateEmployee()  
+    updateData()  
   }
 });
 };

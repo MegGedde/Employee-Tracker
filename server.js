@@ -1,10 +1,5 @@
 const inquirer = require('inquirer');
-// const express = require('express');
-const db = require('./db/connection');
-const mysql = require('mysql2');
-const cTable = require('console.table');
 const { displayDepartments, displayRoles, displayEmployees, addDepartment, addRole, addEmployee, updateEmployee, getEmployees, getRoles } = require('./routes');
-
 
 const addDept = () => {
     inquirer.prompt( {
@@ -22,7 +17,7 @@ const addDept = () => {
   .then(({ department }) => {
       addDepartment(department);
       console.log('Added '+ department +' to the database');
-      askQuestion();
+      initializeProgram();
     });
 };
 
@@ -69,7 +64,7 @@ const roleData = () => {
                                    console.log('Added '+ role +' to the database');
                                     const data = "'" + role + "', " + "'" + salary + "', " + department;
                                     addRole(data);
-                                    askQuestion();
+                                    initializeProgram();
                                     });
                                     });
                                 });
@@ -131,7 +126,7 @@ const employeeData = () => {
                                                     console.log('Added '+ first_name +' to the database');
                                                     const data = "'" + first_name + "', " + "'" + last_name + "', " + role + ", " + manager;
                                                     addEmployee(data);
-                                                    askQuestion();
+                                                    initializeProgram();
                                                     });
                                                     });
                                                 });
@@ -164,10 +159,9 @@ const updateData = () => {
         choices: roleArray
      }]).then(function({employee, role}) {
             const empID = res[employeesArray.indexOf(employee)].id;
-            console.log(empID + role);
             updateEmployee(empID, role);
             console.log('Updated ' + employee + "'s role to " + role);
-            // askQuestion();
+            initializeProgram();
             });
         });
                   
@@ -176,20 +170,20 @@ const updateData = () => {
 
 
 
-
-const initializePogram = () => {
+const initializeProgram = () => {
 inquirer.prompt( {
     type: 'list',
     name: 'view',
     message: 'What would you like to do?',
     choices: ['View all departments','View all roles','View all employees', 'Add a department', 'Add a role', 'Add an employee', 'Update an employee role']
   })
-  .then(({ view }) => {
+  .then(function({ view }) {
     if (view === 'View all departments') {
-    displayDepartments()
-    // askQuestion();
+    displayDepartments();
+    // console.log('\n')
+    // initializeProgram();
+    // console.log('\n');
   } else if (view === 'View all roles'){
-    console.log('view roles')
     displayRoles()
   } else if (view === 'View all employees'){
     displayEmployees()
@@ -202,28 +196,11 @@ inquirer.prompt( {
   } else if (view === 'Update an employee role'){
     updateData()  
   }
+  console.log('\n');
+  initializeProgram();
 });
 };
 
-const askQuestion = () => {
-    initializePogram();
-}
 
+initializeProgram();
 
-initializePogram();
-
-// const PORT = process.env.PORT || 3001;
-// const app = express();
-// // Express middleware
-// app.use(express.urlencoded({ extended: false }));
-// app.use(express.json());
-
-//   // Default response for any other request (Not Found)
-//   app.use((req, res) => {
-//     res.status(404).end();
-//   });
-
-
-// app.listen(PORT, () => {
-//     console.log(`Server running on port ${PORT}`);
-//   });

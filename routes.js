@@ -13,7 +13,7 @@ const displayDepartments = function() {
             return;
         };
     });
-};
+    };
 
 const displayRoles = () => {
     const sql = `SELECT departments.name, roles.id, roles.job_title, roles.salary FROM roles
@@ -27,7 +27,7 @@ const displayRoles = () => {
             return;
         };
     });
-};
+    };
 
 const displayEmployees = function() {
     const sql = `SELECT departments.name, roles.job_title, roles.salary, employees.id, employees.first_name, employees.last_name, employees.manager_id
@@ -43,7 +43,7 @@ const displayEmployees = function() {
             return;
         };
     });
-};
+    };
 
 const addDepartment = function(deptValue) {
     const sql = `INSERT INTO departments (name)
@@ -145,21 +145,6 @@ const updateEmployee = function(emp, newRole) {
     });
     
 }
-
-// const updateEmployee = function(employee, newRole) {
-//     const sql = `UPDATE employees SET role_id = ${newRole}
-//                  WHERE id = ${employee}`;
-//     db.query(sql, (err, results) => {
-//         if (err) {
-//             console.log('Error with updating employee')
-//             return;
-//         } else {
-//             console.table(results);
-//             return;
-//         };
-//     });
-// };
-
 
 module.exports = {
     displayDepartments, 

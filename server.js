@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const { displayDepartments, displayRoles, displayEmployees, addDepartment, addRole, addEmployee, updateEmployee, getEmployees, getRoles } = require('./routes');
+const { displayDepartments, displayRoles, displayEmployees, addDepartment, addRole, addEmployee, updateEmployee, getEmployees, getRoles, getDepartments, getManagers } = require('./routes');
 
 const addDept = () => {
     inquirer.prompt( {
@@ -48,26 +48,28 @@ const roleData = () => {
                             }
                 }})
                 .then(({ salary }) => {
+                        getDepartments()
+                         .then(function(res) {
+                          const departmentsArray = [];
+                          for (let i=0; i<res.length; i++) {
+                          departmentsArray.push(res[i].name);
+                          }
                                 inquirer.prompt( {
-                                        type: 'input',
+                                        type: 'list',
                                         name: 'department',
                                         message: "What department does this role belong to?",
-                                        validate: departmentInput => {
-                                            if (departmentInput) {
-                                            return true;
-                                            } else {
-                                            console.log('Please enter the department')
-                                            return false;
-                                            }
-                                }})
+                                        choices: departmentsArray
+                                        })
                                 .then(({ department }) => {
+                                  const deptID = res[departmentsArray.indexOf(department)].id;
                                    console.log('Added '+ role +' to the database');
-                                    const data = "'" + role + "', " + "'" + salary + "', " + department;
+                                    const data = "'" + role + "', " + "'" + salary + "', " + deptID;
                                     addRole(data);
                                     initializeProgram();
                                     });
                                     });
                                 });
+                              });
                                 };
 
 const employeeData = () => {
@@ -97,40 +99,42 @@ const employeeData = () => {
                                 }
                     }})
                     .then(({ last_name }) => {
+                          getRoles()
+                          .then(function(response) {
+                              const roleArray = [];
+                              for (let i=0; i<response.length; i++) {
+                                  roleArray.push(response[i].title);
+                              }
                                     inquirer.prompt( {
-                                            type: 'input',
+                                            type: 'list',
                                             name: 'role',
                                             message: "What is the employee's role?",
-                                            validate: roleInput => {
-                                                if (roleInput) {
-                                                return true;
-                                                } else {
-                                                console.log("Please enter the employee's role")
-                                                return false;
-                                                }
-                                    }})
+                                            choices: roleArray
+                                    })
                                     .then(({ role }) => {
+                                      getManagers()
+                                        .then(function(res) {
+                                            const employeesArray = [];
+                                            for (let i=0; i<res.length; i++) {
+                                                employeesArray.push(res[i].name);
+                                            }
                                                     inquirer.prompt( {
-                                                        type: 'input',
+                                                        type: 'list',
                                                         name: 'manager',
                                                         message: "Who is the employee's manager?",
-                                                        validate: managerInput => {
-                                                            if (managerInput) {
-                                                            return true;
-                                                            } else {
-                                                            console.log("Please enter the employee's manager")
-                                                            return false;
-                                                            }
-                                                }})
+                                                        choices: employeesArray
+                                                      })
                                                 .then(({ manager }) => {
+                                                  const manID = res[employeesArray.indexOf(manager)].id;
                                                     console.log('Added '+ first_name +' to the database');
-                                                    const data = "'" + first_name + "', " + "'" + last_name + "', " + role + ", " + manager;
-                                                    addEmployee(data);
+                                                    addEmployee(first_name, last_name, manID, role);
                                                     initializeProgram();
                                                     });
                                                     });
                                                 });
                                     });
+                                  });
+                                });
                                     };
 
 
@@ -179,14 +183,18 @@ inquirer.prompt( {
   })
   .then(function({ view }) {
     if (view === 'View all departments') {
-    displayDepartments();
-    // console.log('\n')
-    // initializeProgram();
-    // console.log('\n');
+      displayDepartments();
+        console.log('\n');
+        initializeProgram();
+        console.log('\n');
   } else if (view === 'View all roles'){
     displayRoles()
+    initializeProgram();
+    console.log('\n');
   } else if (view === 'View all employees'){
     displayEmployees()
+    initializeProgram();
+    console.log('\n');
   } else if (view === 'Add a department'){
     addDept()  
   } else if (view === 'Add a role'){
@@ -196,8 +204,6 @@ inquirer.prompt( {
   } else if (view === 'Update an employee role'){
     updateData()  
   }
-  console.log('\n');
-  initializeProgram();
 });
 };
 

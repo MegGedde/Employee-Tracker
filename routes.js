@@ -58,31 +58,30 @@ const addDepartment = function(deptValue) {
     });
 };
 
-const addEmployee = function(empData) {
+const addEmployee = function(first, last, manager, role) {
+    return new Promise(function(resolve, reject) {
+        const queryString = "SELECT id FROM roles WHERE job_title = ?";
+        db.query(queryString, role, function(err, result) {
+            if (err) {
+                return reject(err);
+            }
+            const newRoleId = result[0].id;
+            // const queryString = "INSERT INTO employees ? VALUES ?"
     const sql = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
-    VALUES (${empData})`;
+    VALUES ('${first}', '${last}', '${newRoleId}', '${manager}')`;
     db.query(sql, (err, results) => {
+        //  db.query(queryString, [{first_name: first},{last_name: last},{role_id: newRoleId},{manager_id: manager}], function(err, results) {
         if (err) {
             console.log('Error with adding employee')
             return;
         } else {
-            return;
+            return resolve();
         };
     });
+});
+});
 };
 
-const addRole = function(roleData) {
-    const sql = `INSERT INTO roles (job_title, salary, department_id)
-    VALUES (${roleData})`;
-    db.query(sql, (err, results) => {
-        if (err) {
-            console.log('Error with adding role')
-            return;
-        } else {
-            return;
-        };
-    });
-};
 
 const getEmployees = function() {
     return new Promise(function(resolve, reject) {
@@ -124,6 +123,59 @@ const getRoles = function() {
     });
 };
 
+const getDepartments = function() {
+    return new Promise(function(resolve, reject) {
+        const queryString = "SELECT * FROM departments";
+        db.query(queryString, function(err, result) {
+            if (err) {
+                return reject(err);
+            }
+            const departmentsArray = [];
+            for (let i=0; i<result.length; i++) {
+                const departmentObj = {
+                    id: result[i].id,
+                    name: result[i].name
+                };
+                departmentsArray.push(departmentObj);
+            }
+            return resolve(departmentsArray);
+        });
+    });
+};
+
+const getManagers = function() {
+    return new Promise(function(resolve, reject) {
+        const queryString = "SELECT * FROM employees WHERE role_id = 1";
+        db.query(queryString, function(err, result) {
+            if (err) {
+                return reject(err);
+            }
+            const employeesArray = [];
+            for (let i=0; i<result.length; i++) {
+                const empObj = {
+                    id: result[i].id,
+                    name: result[i].first_name + " " + result[i].last_name
+                };
+                employeesArray.push(empObj);
+            }
+            return resolve(employeesArray);
+        });
+    });
+};
+
+const addRole = function(roleData) {
+    const sql = `INSERT INTO roles (job_title, salary, department_id)
+    VALUES (${roleData})`;
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.log('Error with adding role')
+            return;
+        } else {
+            return;
+        };
+    });
+};
+
 const updateEmployee = function(emp, newRole) {
     return new Promise(function(resolve, reject) {
         const queryString = "SELECT id FROM roles WHERE job_title = ?";
@@ -143,7 +195,6 @@ const updateEmployee = function(emp, newRole) {
                 });
         });
     });
-    
 }
 
 module.exports = {
@@ -155,5 +206,7 @@ module.exports = {
     addRole,
     updateEmployee,
     getEmployees,
+    getDepartments,
+    getManagers,
     getRoles
 };
